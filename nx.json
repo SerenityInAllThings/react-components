@@ -13,5 +13,12 @@
         "accessToken": "ZDQyNWI4MzctZDVlMC00NWFmLWIwYjUtYzBkMTJiZDIzZDEzfHJlYWQtd3JpdGU="
       }
     }
+  },
+  "generators": {
+    "@nrwl/react": {
+      "application": {
+        "babel": true
+      }
+    }
   }
 }
