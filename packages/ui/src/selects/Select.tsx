@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import VerticalDivider from '../dividers';
 import { ArrowDown, Loading } from '../icons';
-import { isClickOutside } from '../utils/isClickOutside';
+import { isClickOutside } from '../utils';
+import Options from './Options';
 
 const Container = styled.div<{ open: boolean }>`
   position: relative;
@@ -30,12 +31,13 @@ const IconContainer = styled.div`
 
 export interface Props {
   text: string;
+  options: any[];
   loading?: boolean;
   onOpen?: () => void;
   onClose?: () => void;
 }
 
-export default ({ text, loading = false, onOpen, onClose }: Props) => {
+export default ({ text, options, loading = false, onOpen, onClose }: Props) => {
   console.log('render');
   const ref = useRef<HTMLDivElement>(null);
   const [isOpen, setOpen] = useState(false);
@@ -75,33 +77,7 @@ export default ({ text, loading = false, onOpen, onClose }: Props) => {
         <VerticalDivider />
         <ArrowDown />
       </IconContainer>
-      {optionsAvailable && <Options />}
+      {optionsAvailable && <Options options={options} />}
     </Container>
-  );
-};
-
-const OptionsContainer = styled.div`
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  top: 100%;
-  margin-top: 2%;
-  z-index: 2;
-  width: 100%;
-  border-radius: 0.25rem;
-  padding-top: 0.1rem;
-  padding-bottom: 0.1rem;
-  box-shadow: 0.15rem 0.15rem 0.8rem gray;
-  background-color: white;
-  text-indent: 0.6rem;
-`;
-
-const Options = () => {
-  return (
-    <OptionsContainer>
-      <p>1</p>
-      <p>2</p>
-      <p>3</p>
-    </OptionsContainer>
   );
 };

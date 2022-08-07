@@ -52,6 +52,12 @@ export default {
       control: { type: 'select' },
     },
   },
+  args: {
+    text: 'Selecione...',
+    loading: false,
+    type: 'small',
+    options: [1, 2, 3, 4, 5, 6],
+  },
 } as Meta<Props>;
 
 const Template: Story<Props & WithContainerType> = ({ ...args }) => {
@@ -65,15 +71,8 @@ const Template: Story<Props & WithContainerType> = ({ ...args }) => {
 };
 
 export const Primary = Template.bind({});
-Primary.args = {
-  text: 'Selecione...',
-  loading: false,
-  type: 'small',
-};
 
 export const Loading = Template.bind({});
 Loading.args = {
-  text: 'Selecione...',
   loading: true,
-  type: 'small',
 };
