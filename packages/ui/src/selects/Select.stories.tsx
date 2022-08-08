@@ -1,6 +1,7 @@
 import { Meta, Story } from '@storybook/react';
 import Select, { Props } from './Select';
 import styled from 'styled-components';
+import { useState } from '@storybook/addons';
 
 const InlineContainer = styled.div`
   display: flex;
@@ -56,16 +57,25 @@ export default {
     text: 'Selecione...',
     loading: false,
     type: 'small',
-    options: [1, 2, 3, 4, 5, 6],
+    options: [
+      { text: '1', value: 1 },
+      { text: '2', value: 2 },
+      { text: '3', value: 3 },
+      { text: '4', value: 4 },
+      { text: '5', value: 5 },
+      { text: '6', value: 6 },
+    ],
   },
-} as Meta<Props>;
+} as Meta<Props<number>>;
 
-const Template: Story<Props & WithContainerType> = ({ ...args }) => {
+const Template: Story<Props<number> & WithContainerType> = ({ ...args }) => {
   const Container = GetContainer(args.type);
+  const [selected, setSelected] = useState(args.text);
+  const onSelection = (n: number) => setSelected(n.toString());
 
   return (
     <Container>
-      <Select {...args} />
+      <Select {...args} text={selected} onSelection={onSelection} />
     </Container>
   );
 };

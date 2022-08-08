@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { useOverflowY } from '../hooks';
 
-interface Props {
-  options: any[];
+export interface Selectable<T> {
+  text: string;
+  value: T;
+}
+
+interface Props<T> {
+  options: Selectable<T>[];
+  onSelection: (selected: T) => void;
 }
 
 const OptionsContainer = styled.div<{ overflow: boolean }>`
@@ -25,13 +31,36 @@ const OptionsContainer = styled.div<{ overflow: boolean }>`
   overflow-y: auto;
 `;
 
-export default ({ options }: Props) => {
+export default <T,>({ options, onSelection }: Props<T>) => {
   const { ref, isOverflowY } = useOverflowY();
   return (
     <OptionsContainer ref={ref} overflow={isOverflowY}>
-      {options.map((o) => (
-        <p>{o.toString()}</p>
+      {options.map((o, i) => (
+        <SingleOption option={o} key={i} onSelected={onSelection} />
       ))}
     </OptionsContainer>
   );
+};
+
+const OptionContainer = styled.div`
+  padding-bottom: 0.2rem;
+  padding-top: 0.2rem;
+  background-color: white;
+  animation-duration: 0.5s;
+  &:hover {
+    background-color: LightSkyBlue;
+  }
+`;
+
+interface OptionProps<T> {
+  option: Selectable<T>;
+  onSelected: (value: T) => void;
+}
+
+const SingleOption = <T,>({ option, onSelected }: OptionProps<T>) => {
+  const onSelection = useCallback(
+    () => onSelected(option.value),
+    [onSelected, option]
+  );
+  return <OptionContainer onClick={onSelection}>{option.text}</OptionContainer>;
 };

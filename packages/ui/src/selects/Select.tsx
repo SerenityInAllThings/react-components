@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import VerticalDivider from '../dividers';
 import { ArrowDown, Loading } from '../icons';
 import { isClickOutside } from '../utils';
-import Options from './Options';
+import Options, { Selectable } from './Options';
 
 const Container = styled.div<{ open: boolean }>`
   position: relative;
@@ -29,15 +29,23 @@ const IconContainer = styled.div`
   height: 100%;
 `;
 
-export interface Props {
+export interface Props<T> {
   text: string;
-  options: any[];
+  options: Selectable<T>[];
   loading?: boolean;
+  onSelection?: (value: T) => void;
   onOpen?: () => void;
   onClose?: () => void;
 }
 
-export default ({ text, options, loading = false, onOpen, onClose }: Props) => {
+export default <T,>({
+  text,
+  options,
+  loading = false,
+  onSelection,
+  onOpen,
+  onClose,
+}: Props<T>) => {
   console.log('render');
   const ref = useRef<HTMLDivElement>(null);
   const [isOpen, setOpen] = useState(false);
@@ -77,7 +85,9 @@ export default ({ text, options, loading = false, onOpen, onClose }: Props) => {
         <VerticalDivider />
         <ArrowDown />
       </IconContainer>
-      {optionsAvailable && <Options options={options} />}
+      {optionsAvailable && (
+        <Options options={options} onSelection={(v) => onSelection?.(v)} />
+      )}
     </Container>
   );
 };
