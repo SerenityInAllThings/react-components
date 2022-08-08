@@ -54,28 +54,39 @@ export default {
     },
   },
   args: {
-    text: 'Selecione...',
+    filter: '',
+    placeholder: 'Selecione...',
     loading: false,
     type: 'small',
     options: [
-      { text: '1', value: 1 },
-      { text: '2', value: 2 },
-      { text: '3', value: 3 },
-      { text: '4', value: 4 },
-      { text: '5', value: 5 },
-      { text: '6', value: 6 },
+      { text: '1a', value: 1 },
+      { text: '2a', value: 2 },
+      { text: '3a', value: 3 },
+      { text: '4b', value: 4 },
+      { text: '5b', value: 5 },
+      { text: '6b', value: 6 },
     ],
   },
 } as Meta<Props<number>>;
 
 const Template: Story<Props<number> & WithContainerType> = ({ ...args }) => {
   const Container = GetContainer(args.type);
-  const [selected, setSelected] = useState(args.text);
+  const [filter, setFilter] = useState('');
+  const [selected, setSelected] = useState(args.filter);
   const onSelection = (n: number) => setSelected(n.toString());
+  const filteredOptions = args.options.filter((o) =>
+    o.text.toLowerCase().includes(filter.toLowerCase())
+  );
 
   return (
     <Container>
-      <Select {...args} text={selected} onSelection={onSelection} />
+      <Select
+        {...args}
+        filter={filter}
+        onSelection={onSelection}
+        onFilter={setFilter}
+        options={filteredOptions}
+      />
     </Container>
   );
 };

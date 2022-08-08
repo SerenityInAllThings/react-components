@@ -14,9 +14,6 @@ const Container = styled.div<{ open: boolean }>`
   height: 100%;
   border: 1.9px solid black;
   border-radius: ${({ open }) => (open ? '0.25rem' : '1.3rem')};
-  padding-left: '0.65rem';
-  padding-right: '0.65rem';
-  text-indent: ${({ open }) => (open ? '0.1rem' : '0.6rem')};
   min-width: 120px;
   min-height: 1rem;
   transition-property: border-radius, text-indent;
@@ -24,35 +21,65 @@ const Container = styled.div<{ open: boolean }>`
   background-color: white;
 `;
 
+const SearchSizer = styled.div<{ open: boolean }>`
+  display: flex;
+  flex: 5;
+  margin-left: ${({ open }) => (open ? '0.25rem' : '0.65rem')};
+  transition-property: margin-left;
+  transition-duration: 0.4s;
+`;
+
+const SearchInput = styled.input`
+  padding: 0;
+  width: 90%;
+  border: none;
+  -webkit-appearance: none;
+  &:focus {
+    outline: none;
+  }
+`;
+
 const IconContainer = styled.div`
+  flex: 1;
   display: flex;
   height: 100%;
 `;
 
 export interface Props<T> {
-  text: string;
+  filter: string;
+  placeholder?: string;
   options: Selectable<T>[];
   loading?: boolean;
   onSelection?: (value: T) => void;
   onOpen?: () => void;
   onClose?: () => void;
+  onFilter?: (filter: string) => void;
 }
 
 export default <T,>({
-  text,
+  filter,
   options,
+  placeholder,
   loading = false,
   onSelection,
   onOpen,
   onClose,
+  onFilter,
 }: Props<T>) => {
-  console.log('render');
+  const inputRef = useRef<HTMLInputElement>(null);
+  const focusFilter = useCallback(() => {
+    const { current } = inputRef;
+    if (!current) return;
+    current.focus();
+  }, [inputRef]);
+
   const ref = useRef<HTMLDivElement>(null);
   const [isOpen, setOpen] = useState(false);
   const open = useCallback(() => {
+    focusFilter();
     setOpen(true);
     onOpen?.();
-  }, [setOpen, onOpen]);
+  }, [setOpen, onOpen, focusFilter]);
   const close = useCallback(() => {
     setOpen(false);
     onClose?.();
@@ -79,7 +106,15 @@ export default <T,>({
 
   return (
     <Container ref={ref} open={optionsAvailable} onClick={onClick}>
-      <span>{text}</span>
+      <SearchSizer open={optionsAvailable}>
+        <SearchInput
+          ref={inputRef}
+          type="text"
+          placeholder={placeholder}
+          value={filter}
+          onChange={({ target: { value } }) => onFilter?.(value)}
+        />
+      </SearchSizer>
       <IconContainer>
         {loading && <Loading />}
         <VerticalDivider />
