@@ -86,7 +86,13 @@ export default <T,>({
         <ArrowDown />
       </IconContainer>
       {optionsAvailable && (
-        <Options options={options} onSelection={(v) => onSelection?.(v)} />
+        <Options
+          options={options}
+          onSelection={(v) => {
+            close();
+            onSelection?.(v);
+          }}
+        />
       )}
     </Container>
   );
